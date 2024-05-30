@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const tokenUrl = 'https://opentdb.com/api_token.php?command=request';
+    const unsplashAccessKey = ''; // Replace with your Unsplash API Access Key
     let apiUrl = 'https://opentdb.com/api.php?amount=10&category=11&difficulty=easy&type=multiple';
     const gameContainer = document.getElementById('game');
     const startGameButton = document.getElementById('start-game');
@@ -16,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const numQuestionsInput = document.getElementById('num-questions');
     const categorySelect = document.getElementById('category');
     const difficultySelect = document.getElementById('difficulty');
+    const questionImage = document.getElementById('question-image');
+    const defaultImageUrl = 'https://upload.wikimedia.org/wikipedia/en/b/bd/Logo_of_Nigerian_Millionaire.jpg';
 
     continueButton.textContent = 'Continue';
     continueButton.classList.add('hidden');
@@ -39,10 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const winMusic = document.getElementById('win-music');
     const loseMusic = document.getElementById('lose-music');
 
-    // // Set volume to 25%
-    // backgroundMusic.volume = 0.25;
-    // winMusic.volume = 0.25;
-    // loseMusic.volume = 0.25;
+    // Set volume to 25%
+    backgroundMusic.volume = 0.25;
+    winMusic.volume = 0.25;
+    loseMusic.volume = 0.25;
 
     let questions = [];
     let currentQuestionIndex = 0;
@@ -105,7 +108,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function displayQuestion(questionData) {
+    async function fetchUnsplashImage(query) {
+        try {
+            const response = await fetch(`https://api.unsplash.com/search/photos?query=${query}&client_id=${unsplashAccessKey}`);
+            const data = await response.json();
+            if (data.results.length > 0) {
+                return data.results[0].urls.small;
+            } else {
+                return defaultImageUrl;
+            }
+        } catch (error) {
+            console.error('Error fetching image from Unsplash:', error);
+            return defaultImageUrl;
+        }
+    }
+
+    async function displayQuestion(questionData) {
         questionElement.innerHTML = decodeHTMLEntities(questionData.question);
         optionsContainer.innerHTML = '';
 
@@ -122,6 +140,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         lifelineUsed = false;
+
+        // Hide the image element initially
+        questionImage.style.display = 'none';
+
+        // Fetch image from Unsplash
+        const imageQuery = questionData.category + ' ' + questionData.question.split(' ').slice(0, 5).join(' ');
+        const imageUrl = await fetchUnsplashImage(imageQuery);
+        
+        // Update the image source and show the image
+        questionImage.src = imageUrl;
+        questionImage.onload = () => {
+            questionImage.style.display = 'block';
+        };
+        questionImage.onerror = () => {
+            questionImage.src = defaultImageUrl;
+            questionImage.style.display = 'block';
+        };
     }
 
     function decodeHTMLEntities(text) {
@@ -141,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetSelectedOptions();
         lifelineButton.classList.add('hidden');
         button.classList.add('selected');
+        disableOptions();
         setTimeout(() => {
             if (selectedOption === correctAnswer) {
                 button.style.backgroundColor = 'green';
@@ -171,11 +207,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 500);
     }
 
+    function disableOptions() {
+        const options = document.querySelectorAll('.option');
+        options.forEach(option => {
+            option.disabled = true; // Disable each option
+        });
+    }
+
     function resetSelectedOptions() {
         const options = document.querySelectorAll('.option');
         options.forEach(option => {
             option.classList.remove('selected');
             option.style.backgroundColor = '';
+            option.disabled = false; // Enable each option
         });
     }
 
@@ -240,6 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
         messageElement.classList.add('hidden');
         startGameButton.classList.remove('hidden');
         gameOptionsForm.classList.remove('hidden');
+        questionImage.src = defaultImageUrl; // Reset to default image
     }
 
     function useLifeline() {
