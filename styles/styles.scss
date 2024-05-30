@@ -1,11 +1,10 @@
-// Variables
 $background-color: #1d1f21;
 $text-color: #ffffff;
 $game-bg-color: #2c3e50;
 $button-bg-color: #e74c3c;
 $button-hover-color: #34495e;
 $option-bg-color: #34495e;
-$option-hover-color: #1abc9c;
+$option-hover-color: #f1c40f; // Yellow color for hover effect
 $option-selected-color: #3498db;
 $font-stack: Arial, sans-serif;
 $max-width: 600px;
@@ -22,10 +21,8 @@ body {
     margin: 0;
     padding: 70px;
     box-sizing: border-box;
-    overflow: hidden; // Prevent scrolling
 }
 
-// Game Container
 #game {
     padding: 20px;
     border-radius: 8px;
@@ -42,17 +39,16 @@ body {
 
     #current-count {
         font-size: 1.2em;
-        margin-bottom: 0; 
-        color: rgb(0, 255, 0); 
+        margin-bottom: 0;
+        color: rgb(0, 255, 0);
     }
     
     #lifeline-count {
         font-size: 1.2em;
-        margin-top: 0; 
-        color: rgb(255, 0, 0); 
+        margin-top: 0;
+        color: rgb(255, 0, 0);
     }
     
-
     .option {
         display: block;
         width: 100%;
@@ -67,6 +63,12 @@ body {
 
         &.selected {
             background: $option-selected-color;
+        }
+
+        @media (min-width: 769px) {
+            &:hover {
+                background: $option-hover-color;
+            }
         }
     }
 
@@ -99,11 +101,33 @@ body {
     }
 }
 
-
 // Media Queries
 @media (min-width: 769px) {
-    .option:hover {
-        background: $option-hover-color;
+    #options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .option {
+        width: 100%;
+        text-align: center;
+        padding: 15px;
+        margin: 5px;
+        border: 1px solid $option-bg-color;
+        background: $option-bg-color;
+        color: $text-color;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background 0.3s ease;
+
+        &.selected {
+            background: $option-selected-color;
+        }
+
+        &:hover {
+            background: $option-hover-color;
+        }
     }
 }
 
@@ -122,6 +146,27 @@ body {
 
         .option {
             padding: 8px;
+        }
+    }
+
+    #options {
+        display: block;
+    }
+
+    .option {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid $option-bg-color;
+        background: $option-bg-color;
+        color: $text-color;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background 0.3s ease;
+
+        &.selected {
+            background: $option-selected-color;
         }
     }
 }
@@ -148,5 +193,50 @@ body {
 @media (min-width: 1200px) {
     body {
         height: 95vh;
+    }
+}
+
+#message {
+    font-size: 1.2em;
+    margin-top: 20px;
+    color: #ffeb3b;
+}
+
+.hidden {
+    display: none;
+}
+
+.option {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid $option-bg-color;
+    background: $option-bg-color;
+    color: $text-color;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+
+    &.selected {
+        background: $option-selected-color;
+    }
+    
+    &.correct {
+        background-color: green;
+    }
+
+    &.incorrect {
+        background-color: red;
+    }
+
+    &.blink {
+        animation: blink-animation 0.5s steps(5, start) 2;
+    }
+}
+
+@keyframes blink-animation {
+    to {
+        visibility: hidden;
     }
 }

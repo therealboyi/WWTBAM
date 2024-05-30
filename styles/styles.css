@@ -9,7 +9,6 @@ body {
   margin: 0;
   padding: 70px;
   box-sizing: border-box;
-  overflow: hidden;
 }
 
 #game {
@@ -50,6 +49,11 @@ body {
 #game .option.selected {
   background: #3498db;
 }
+@media (min-width: 769px) {
+  #game .option:hover {
+    background: #f1c40f;
+  }
+}
 #game button {
   margin-top: 20px;
   padding: 10px 20px;
@@ -76,8 +80,28 @@ body {
 }
 
 @media (min-width: 769px) {
+  #options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .option {
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    margin: 5px;
+    border: 1px solid #34495e;
+    background: #34495e;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+  }
+  .option.selected {
+    background: #3498db;
+  }
   .option:hover {
-    background: #1abc9c;
+    background: #f1c40f;
   }
 }
 @media (max-width: 768px) {
@@ -93,6 +117,24 @@ body {
   }
   #game .option {
     padding: 8px;
+  }
+  #options {
+    display: block;
+  }
+  .option {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #34495e;
+    background: #34495e;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+  }
+  .option.selected {
+    background: #3498db;
   }
 }
 @media (max-width: 480px) {
@@ -113,5 +155,45 @@ body {
 @media (min-width: 1200px) {
   body {
     height: 95vh;
+  }
+}
+#message {
+  font-size: 1.2em;
+  margin-top: 20px;
+  color: #ffeb3b;
+}
+
+.hidden {
+  display: none;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #34495e;
+  background: #34495e;
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+.option.selected {
+  background: #3498db;
+}
+.option.correct {
+  background-color: green;
+}
+.option.incorrect {
+  background-color: red;
+}
+.option.blink {
+  animation: blink-animation 0.5s steps(5, start) 2;
+}
+
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
   }
 }
